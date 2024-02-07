@@ -1,14 +1,15 @@
-name: Pull Request
+name: CI
 
 on:
   push:
-    branches: [main]
+    branches: ["main"]
   pull_request:
-    branches: [main]
+    branches: ["main"]
 
 jobs:
-  echo_hello_world:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Echo Hello World
-        run: echo "Hello World"
+      - name: Run a one-line script
+        run: echo Hello, world!
