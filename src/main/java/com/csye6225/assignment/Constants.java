@@ -1,0 +1,7 @@
+package com.csye6225.assignment;
+
+public class Constants {
+    public static final String V1_USER_URI = "/v1/user";
+    public static final String HEALTH_URI = "/healthz";
+    public static final String VALID_EMAIL_REGEX = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+}
