@@ -3,7 +3,7 @@
 ## Overview
 
 This repository contains a Spring Boot application that utilizes Hibernate as the Object-Relational Mapping (ORM) tool to connect to a PostgreSQL database. The application features a single API endpoint, "/healthz," with specific behaviors for different scenarios.
-
+ 
 ## API Endpoint
 
 ### `/healthz`
