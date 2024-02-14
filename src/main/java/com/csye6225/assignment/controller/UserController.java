@@ -15,8 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import static com.csye6225.assignment.Constants.V1_USER_URI;
-import static com.csye6225.assignment.Constants.VALID_EMAIL_REGEX;
+import static com.csye6225.assignment.Constants.*;
 
 @RestController
 @RequestMapping(V1_USER_URI)
@@ -37,7 +36,11 @@ public class UserController {
             return ResponseEntity.badRequest().build();
         }
 
-        if(user.getPassword()==null){
+        if(user.getPassword()==null || user.getPassword().isEmpty()){
+            return ResponseEntity.badRequest().build();
+        }
+
+        if(!user.getPassword().matches(PASSWORD_REGEX)){
             return ResponseEntity.badRequest().build();
         }
 
@@ -90,7 +93,14 @@ public class UserController {
         if (currentUser==null){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+
         if(user.getUsername() != null){
+            return ResponseEntity.badRequest().build();
+        }
+        if(null != user.getPassword() && user.getPassword().isEmpty()){
+            return ResponseEntity.badRequest().build();
+        }
+        if(null != user.getPassword() && !user.getPassword().matches(PASSWORD_REGEX)){
             return ResponseEntity.badRequest().build();
         }
         if(user.getAccountUpdated() != null){

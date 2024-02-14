@@ -32,7 +32,7 @@ public class BlockingHttpMethodInterceptor implements HandlerInterceptor {
             response.setContentLength(0);
             return false;
 
-        } else if (requestURI.equalsIgnoreCase(V1_USER_URI) ){
+        } else if (requestURI.equalsIgnoreCase(V1_USER_URI) || requestURI.equalsIgnoreCase(V1_USER_URI + "/self") ){
             if((HttpMethod.POST.matches(requestMethod) || HttpMethod.PUT.matches(requestMethod) || HttpMethod.GET.matches(requestMethod))){
                 return true;
             }
@@ -40,7 +40,7 @@ public class BlockingHttpMethodInterceptor implements HandlerInterceptor {
             response.setContentLength(0);
             return false;
         }
-//        response.setContentLength(0);
+        response.setContentLength(0);
         return true;
     }
 }
