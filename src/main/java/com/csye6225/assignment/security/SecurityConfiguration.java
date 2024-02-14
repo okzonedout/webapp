@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
@@ -44,10 +45,10 @@ public class SecurityConfiguration {
 
 //        http.csrf(csrf->csrf.disable());
 
-        http.csrf(csrf->csrf.disable())
+        http.csrf(AbstractHttpConfigurer::disable)
                 .authenticationProvider(daoAuthenticationProvider())
-                .authorizeHttpRequests((authorize) -> authorize.requestMatchers(HttpMethod.GET,"/healthz"))
-                .authorizeHttpRequests((authorize)->authorize.requestMatchers("/v1/user/**"))
+                .authorizeHttpRequests((authorize) -> authorize.requestMatchers("/healthz").permitAll())
+                .authorizeHttpRequests((authorize) -> authorize.requestMatchers("/v1/user/**"))
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
