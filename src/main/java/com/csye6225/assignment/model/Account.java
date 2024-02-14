@@ -40,12 +40,10 @@ public class Account {
 
     @Getter
     @Setter
-    @JsonIgnore
     private LocalDateTime accountCreated;
 
     @Getter
     @Setter
-    @JsonIgnore
     private LocalDateTime accountUpdated;
 
 

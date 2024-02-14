@@ -15,7 +15,7 @@ jobs:
         image: postgres:latest
         env:
           POSTGRES_DB: assignmentdb
-          POSTGRES_USER: postgres
+          POSTGRES_USER: Omkar
           POSTGRES_PASSWORD: Logitech@135#
         ports:
           - 5432:5432
@@ -32,4 +32,4 @@ jobs:
           distribution: "temurin"
           cache: maven
       - name: Build with Maven
-        run: mvn -B clean package -DskipTests
+        run: mvn -B clean package
