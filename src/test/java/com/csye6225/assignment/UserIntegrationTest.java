@@ -57,7 +57,7 @@ public class UserIntegrationTest {
                 .with(httpBasic("testuser@example.com", "Test@1234"))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.username",equalTo("testuser@example.com")))
+                .andExpect(jsonPath("$.username",equalTo("testuser1@example.com")))
                 .andExpect(jsonPath("$.accountCreated",not(empty())));
     }
 
