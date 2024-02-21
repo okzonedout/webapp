@@ -43,6 +43,9 @@ jobs:
         run: mvn -B clean package -DskipTests
 
       - name: Initialize Packer
+        run: packer init packer/custom-image.pkr.hcl
+
+      - name: Initialize Packer
         run: packer fmt -check packer/custom-image.pkr.hcl
 
       - name: Validate Packer Template
