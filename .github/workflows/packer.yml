@@ -61,5 +61,5 @@ jobs:
       - name: Validate Packer Template
         run: packer validate packer/custom-image.pkr.hcl
 
-      - name: Validate Packer Template
-        run: packer validate packer/custom-image.pkr.hcl
+      - name: Build Packer Template
+        run: packer build packer/custom-image.pkr.hcl
