@@ -36,8 +36,5 @@ jobs:
       - name: Build with Maven
         run: mvn -B clean package -DskipTests
 
-      - name: Hmm...
-        run: echo ${{ secrets.DB_NAME }}
-
       - name: Maven Tests
         run: mvn test
