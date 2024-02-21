@@ -3,12 +3,12 @@
 # Fail the script if any command fails
 set -e
 
+echo "======================== MOVING WEBAPP JAR ========================"
+sudo mv /tmp/webapp.jar /opt/webapp.jar
+
 echo "======================== CREATE USER ========================"
 sudo adduser csye6225 --shell /usr/sbin/nologin
 sudo chown csye6225:csye6225 /opt/webapp.jar
-
-echo "======================== MOVING WEBAPP JAR ========================"
-sudo mv /tmp/webapp.jar /opt/webapp.jar
 
 echo "======================== MOVING WEBAPP SERVICE ========================"
 sudo mv /tmp/webapp.service /etc/systemd/system/webapp.service
