@@ -1,0 +1,17 @@
+[Unit]
+Description=CSYE6225 WEBAPP
+After=syslog.target
+
+[Service]
+User=csye6225
+WorkingDirectory=/opt
+ExecStart=/usr/bin/java -jar webapp.jar
+Restart=on-failure
+Type=simple
+SuccessExitStatus=143
+RemainAfterExit=yes
+StandardOutput=append:/var/log/webapp.log
+StandardError=append:/var/log/webapp-error.log
+
+[Install]
+WantedBy=multi-user.target
