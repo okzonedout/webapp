@@ -3,6 +3,11 @@ name: Packer-CI
 on:
   push:
     branches: ["main"]
+env:
+  POSTGRES_DB: ${{ secrets.DB_NAME }}
+  POSTGRES_USER: ${{ secrets.DB_USER }}
+  POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
+  GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
 
 jobs:
   packer-ci:
@@ -12,9 +17,9 @@ jobs:
       postgres:
         image: postgres:latest
         env:
-          POSTGRES_DB: ${{ secrets.DB_NAME }}
-          POSTGRES_USER: ${{ secrets.DB_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          POSTGRES_DB: POSTGRES_DB
+          POSTGRES_USER: POSTGRES_USER
+          POSTGRES_PASSWORD: POSTGRES_PASSWORD
         ports:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
@@ -40,7 +45,8 @@ jobs:
 
       - name: Authenticate GCP
         uses: google-github-actions/auth@v2
-        with: credentials_json = ${{ secrets.GCP_CREDENTIALS }}
+        with:
+          credentials_json: "${{ secrets.GCP_CREDENTIALS }}"
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
