@@ -56,7 +56,7 @@ jobs:
         run: gcloud info
 
       - name: Initialize Packer
-        run: packer fmt -check packer/custom-image.pkr.hcl
+        run: packer init packer/custom-image.pkr.hcl
 
       - name: Validate Packer Template
         run: packer validate packer/custom-image.pkr.hcl
