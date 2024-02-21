@@ -12,9 +12,9 @@ jobs:
       postgres:
         image: postgres:latest
         env:
-          POSTGRES_DB: assignmentdb
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: Logitech@135#
+          POSTGRES_DB: ${{ secrets.DB_NAME }}
+          POSTGRES_USER: ${{ secrets.DB_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
         ports:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
@@ -26,7 +26,7 @@ jobs:
       - name: Install Packer
         uses: hashicorp/setup-packer@main
         with:
-          packer-version: "latest"
+          version: "latest"
 
       - name: Set up JDK
         uses: actions/setup-java@v3
@@ -39,7 +39,7 @@ jobs:
         run: mvn -B clean package -DskipTests
 
       - name: Initialize Packer
-        run: packer fmt packer/custom-image.pkr.hcl
+        run: packer fmt -check packer/custom-image.pkr.hcl
 
       - name: Validate Packer Template
         run: packer validate packer/custom-image.pkr.hcl
