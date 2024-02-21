@@ -1,9 +1,16 @@
 #! /bin/bash
 
+# Fail the script if any command fails
+set -e
+
+echo "======================== CREATE USER ========================"
+sudo adduser csye6225 --shell /usr/sbin/nologin
+sudo chown csye6225:csye6225 /opt/webapp.jar
+
 echo "======================== MOVING WEBAPP JAR ========================"
 sudo mv /tmp/webapp.jar /opt/webapp.jar
 
-echo "======================== MOVING WEBAPP JAR ========================"
+echo "======================== MOVING WEBAPP SERVICE ========================"
 sudo mv /tmp/webapp.service /etc/systemd/system/webapp.service
 
 echo "======================== INSTALLING POSTGRESQL ========================"
@@ -13,6 +20,8 @@ sudo dnf install -y postgresql-server
 
 echo "======================== INITIALIZING POSTGRES ========================"
 sudo postgresql-setup --initdb
+
+echo "======================== STARTING POSTGRES ========================"
 sudo systemctl start postgresql
 sudo systemctl enable postgresql
 
@@ -21,7 +30,7 @@ sudo -u postgres createdb assignmentdb
 # Setting password for postgres user
 sudo -u postgres psql -U postgres -d postgres -c "alter user postgres with password 'Logitech@135#';"
 
-echo "======================== CONFIGURING POSTGRES ========================"
+echo "======================== CONFIGURING POSTGRES FOR PASSWORD ========================"
 sudo cp /var/lib/pgsql/data/pg_hba.conf /var/lib/pgsql/data/pg_hba.conf-backup
 PG_HBA_CONF="/var/lib/pgsql/data/pg_hba.conf"
 TMP_FILE=$(mktemp)
@@ -33,17 +42,13 @@ sudo rm "$TMP_FILE"
 echo "======================== RESTARTING POSTGRES ========================"
 sudo systemctl restart postgresql
 
-echo "======================== INSTALLING JAVA 17 AMAZON CORRETTO ========================"
+echo "======================== INSTALLING JAVA ========================"
 sudo rpm --import https://yum.corretto.aws/corretto.key
 sudo curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo
 sudo yum install -y java-17-amazon-corretto-devel
 java -version
 
-echo "======================== CREATE USER ========================"
-sudo adduser csye6225 --shell /usr/sbin/nologin
-sudo chown csye6225:csye6225 /opt/webapp.jar
-
-echo "======================== CONFIGURING POSTGRES ========================"
+echo "======================== ENABLING WEBAPP SERVICE ========================"
 sudo systemctl daemon-reload
 sudo systemctl enable webapp.service
 
