@@ -91,7 +91,7 @@ public class UserIntegrationTest {
 
         // Verify the update was successful
         MvcResult updatedResult = mockMvc.perform(get("/v1/user/self")
-                        .with(httpBasic("testuser1@example.com", "Test@1234"))
+                        .with(httpBasic("testuser@example.com", "Test@1234"))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.first_name", equalTo("UpdatedTest")))
