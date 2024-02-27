@@ -5,7 +5,7 @@ After=syslog.target
 [Service]
 User=csye6225
 WorkingDirectory=/opt
-ExecStart=/usr/bin/java -jar webapp.jar
+ExecStart=/usr/bin/java -jar webapp.jar --
 Restart=on-failure
 Type=simple
 SuccessExitStatus=143
