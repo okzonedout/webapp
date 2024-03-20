@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="LOGS" value="/var/log" />
+<!--    <property name="LOGS" value="./log" />-->
+<!--    <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS XXXz} %5p &#45;&#45;&#45;&#45; [%t] %-40.40logger{39} - %m%n</pattern>-->
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${LOGS}/webapp.log</file>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="ch.qos.logback.contrib.json.classic.JsonLayout">
+                <jsonFormatter class="ch.qos.logback.contrib.jackson.JacksonJsonFormatter">
+                    <prettyPrint>false</prettyPrint>
+                </jsonFormatter>
+                <timestampFormat>yyyy-MM-dd HH:mm:ss.SSS Z</timestampFormat>
+<!--                <timeZone>UTC</timeZone>-->
+                <timestampFormatTimezoneId>UTC</timestampFormatTimezoneId>
+                <appendLineSeparator>true</appendLineSeparator>
+                <includeMdc>true</includeMdc>
+            </layout>
+        </encoder>
+        <append>true</append>
+    </appender>
+
+    <logger name="com.csye6225.assignment" level="TRACE">
+        <appender-ref ref="FILE" />
+    </logger>
+
+    <!-- Removed the RollingFile appender for brevity, as it's not directly related to the request -->
+
+<!--    <root level="INFO">-->
+<!--        <appender-ref ref="FILE" /> &lt;!&ndash; Uncommented and set to use FILE appender &ndash;&gt;-->
+<!--    </root>-->
+</configuration>

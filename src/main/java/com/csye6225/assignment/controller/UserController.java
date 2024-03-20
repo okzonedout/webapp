@@ -33,25 +33,30 @@ public class UserController {
     public ResponseEntity<?> createUser(HttpServletRequest request, @RequestBody Account user){
 
         if (user.getUsername()==null){
+            LOGGER.warn("Invalid Payload. Username is null.");
             return ResponseEntity.badRequest().build();
         }
 
         if(user.getPassword()==null || user.getPassword().isEmpty()){
+            LOGGER.warn("Invalid Payload. Password is null.");
             return ResponseEntity.badRequest().build();
         }
 
         if(!user.getPassword().matches(PASSWORD_REGEX)){
+            LOGGER.warn("Invalid Payload. Password requirements unfulfilled.");
             return ResponseEntity.badRequest().build();
         }
 
         if(userService.getUser(user.getUsername())!=null){
+            LOGGER.warn("Invalid Payload. User already exists.");
             return ResponseEntity.badRequest().build();
         }
 
         if(!user.getUsername().matches(VALID_EMAIL_REGEX)){
+            LOGGER.warn("Invalid Payload. Invalid Email");
             return ResponseEntity.badRequest().build();
         }
-
+        LOGGER.info("New user created.");
         return ResponseEntity.ok().body(userService.createUser(user));
     }
 
@@ -61,19 +66,23 @@ public class UserController {
         CustomUserDetail userAuthDetail = (CustomUserDetail) authentication.getPrincipal();
 
         if(userAuthDetail.getUsername().equals("") || userAuthDetail.getPassword().equals("")){
+            LOGGER.warn("Invalid Payload. Credentials are null.");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
         Account currentUser = userService.getUser(userAuthDetail.getUsername());
 
         if (currentUser==null){
+            LOGGER.warn("User does not exist.");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         if(!currentUser.getPassword().equals(userAuthDetail.getPassword())){
+            LOGGER.warn("Invalid Password.");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
+        LOGGER.info("User found. Authenticated");
         return ResponseEntity.status(HttpStatus.OK).body(userService.getUser(userAuthDetail.getUsername()));
 
     }
@@ -85,31 +94,39 @@ public class UserController {
 
         // Invalid username and password
         if(userAuthDetail.getUsername().equals("") || userAuthDetail.getPassword().equals("")){
+            LOGGER.warn("Invalid Payload. Empty Credentials");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
         Account currentUser = userService.getUser(userAuthDetail.getUsername());
 
         if (currentUser==null){
+            LOGGER.warn("User not found.");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         if(user.getUsername() != null){
+            LOGGER.warn("Invalid Payload. Username is empty");
             return ResponseEntity.badRequest().build();
         }
         if(null != user.getPassword() && user.getPassword().isEmpty()){
+            LOGGER.warn("Invalid Payload. Password is empty");
             return ResponseEntity.badRequest().build();
         }
         if(null != user.getPassword() && !user.getPassword().matches(PASSWORD_REGEX)){
+            LOGGER.warn("Invalid Payload. Password invalid");
             return ResponseEntity.badRequest().build();
         }
         if(user.getAccountUpdated() != null){
+            LOGGER.warn("Invalid Payload. Unsupported fields included.");
             return ResponseEntity.badRequest().build();
         }
         if (user.getAccountCreated()!=null){
+            LOGGER.warn("Invalid Payload. Unsupported fields included.");
             return ResponseEntity.badRequest().build();
         }
         user.setUsername(userAuthDetail.getUsername());
+        LOGGER.info("User info updated.");
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userService.updateUser(user));
     }
 }

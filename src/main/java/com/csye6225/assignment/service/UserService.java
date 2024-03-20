@@ -19,7 +19,7 @@ public class UserService {
     @Autowired
     BcryptEncoder bcryptEncoder;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
+//    private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
     private static final Base64.Encoder BASE64ENCODER = Base64.getUrlEncoder();
     private static final SecureRandom secureRandom = new SecureRandom();
 
