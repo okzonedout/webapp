@@ -36,6 +36,11 @@ build {
   }
 
   provisioner "file" {
+    source      = "${var.packer_path}/config.yaml"
+    destination = "/tmp/config.yaml"
+  }
+
+  provisioner "file" {
     source      = "${var.packer_path}/webapp.service"
     destination = "/tmp/webapp.service"
   }
