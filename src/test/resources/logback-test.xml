@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <property name="LOGS" value="/var/log/webapp" />
-<!--    <property name="LOGS" value="./log" />-->
+<!--    <property name="LOGS" value="/var/log/webapp" />-->
+    <property name="LOGS" value="./log" />
 <!--    <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS XXXz} %5p &#45;&#45;&#45;&#45; [%t] %-40.40logger{39} - %m%n</pattern>-->
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>${LOGS}/webapp.log</file>
