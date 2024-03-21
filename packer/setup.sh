@@ -32,8 +32,8 @@ sudo mv /tmp/config.yaml /etc/google-cloud-ops-agent/config.yaml
 sudo systemctl restart google-cloud-ops-agent
 
 echo "======================== CREATE LOG FILE ========================"
-sudo touch /var/log/webapp.log
-sudo chown csye6225:csye6225 /var/log/webapp.log
+sudo touch /var/log/webapp/webapp.log
+sudo chown csye6225:csye6225 /var/log/webapp/webapp.log
 
 
 #echo "======================== INSTALLING POSTGRESQL ========================"
