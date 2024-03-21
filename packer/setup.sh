@@ -34,7 +34,7 @@ sudo systemctl restart google-cloud-ops-agent
 echo "======================== CREATE LOG FILE ========================"
 sudo mkdir /var/log/webapp
 sudo touch /var/log/webapp/webapp.log
-sudo chown csye6225:csye6225 /var/log/webapp
+sudo chown -R csye6225:csye6225 /var/log/webapp
 
 
 #echo "======================== INSTALLING POSTGRESQL ========================"
