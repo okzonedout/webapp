@@ -44,7 +44,8 @@ public class BlockingHttpMethodInterceptor implements HandlerInterceptor {
             return false;
 
         } else if (requestURI.equalsIgnoreCase(V1_USER_URI) || requestURI.equalsIgnoreCase(V1_USER_URI + "/self") ){
-            if((HttpMethod.POST.matches(requestMethod) || HttpMethod.PUT.matches(requestMethod) || HttpMethod.GET.matches(requestMethod))){
+            if((HttpMethod.POST.matches(requestMethod) || HttpMethod.PUT.matches(requestMethod)
+                    || HttpMethod.GET.matches(requestMethod) || HttpMethod.DELETE.matches(requestMethod))){
                 return true;
             }
             response.sendError(HttpStatus.METHOD_NOT_ALLOWED.value());

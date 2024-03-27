@@ -46,6 +46,7 @@ public class UserIntegrationTest {
         newUser.put("password", "Test@1234");
         newUser.put("first_name", "Test");
         newUser.put("last_name", "User");
+//        newUser.put("")
 
         // Create user
         mockMvc.perform(post("/v1/user")
