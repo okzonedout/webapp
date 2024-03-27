@@ -47,17 +47,35 @@ public class UserController {
             return ResponseEntity.badRequest().build();
         }
 
+        if(!user.getUsername().matches(VALID_EMAIL_REGEX)){
+            LOGGER.warn("Invalid Payload. Invalid Email");
+            return ResponseEntity.badRequest().build();
+        }
+
         if(userService.getUser(user.getUsername())!=null){
             LOGGER.warn("Invalid Payload. User already exists.");
             return ResponseEntity.badRequest().build();
         }
 
-        if(!user.getUsername().matches(VALID_EMAIL_REGEX)){
-            LOGGER.warn("Invalid Payload. Invalid Email");
-            return ResponseEntity.badRequest().build();
-        }
         LOGGER.info("New user created.");
         return ResponseEntity.ok().body(userService.createUser(user));
+    }
+
+    @DeleteMapping("/self")
+    public ResponseEntity<?> deleteUser(String username){
+        userService.deleteUser(username);
+
+        return ResponseEntity.ok().body("User" + username + "deleted");
+    }
+
+    @GetMapping("/verifyUser")
+    public ResponseEntity<?> verifyUser(String username, String accessToken){
+        boolean isVerified = userService.verifyUser(username, accessToken);
+        if (isVerified) {
+            return ResponseEntity.ok("User verified successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired access token.");
+        }
     }
 
     @GetMapping("/self")
@@ -71,6 +89,11 @@ public class UserController {
         }
 
         Account currentUser = userService.getUser(userAuthDetail.getUsername());
+
+        if(!currentUser.isVerified()){
+            LOGGER.warn("User not verified");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"msg\":\"User not verified\"}");
+        }
 
         if (currentUser==null){
             LOGGER.warn("User does not exist.");
@@ -99,6 +122,11 @@ public class UserController {
         }
 
         Account currentUser = userService.getUser(userAuthDetail.getUsername());
+
+        if(!currentUser.isVerified()){
+            LOGGER.warn("User not verified");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"msg\":\"User not verified\"}");
+        }
 
         if (currentUser==null){
             LOGGER.warn("User not found.");

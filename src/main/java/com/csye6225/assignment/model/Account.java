@@ -46,6 +46,20 @@ public class Account {
     @Setter
     private LocalDateTime accountUpdated;
 
+    @Getter
+    @Setter
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private boolean isVerified;
+
+    @Getter
+    @Setter
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String accessToken;
+
+    @Getter
+    @Setter
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private LocalDateTime accessTokenExpiry;
 
     @Override
     public String toString() {
