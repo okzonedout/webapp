@@ -92,7 +92,7 @@ public class UserController {
 
         if(!currentUser.isVerified()){
             LOGGER.warn("User not verified");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"msg\":\"User not verified\"}");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"msg\":\"User not verified\"}");
         }
 
         if (currentUser==null){
@@ -125,7 +125,7 @@ public class UserController {
 
         if(!currentUser.isVerified()){
             LOGGER.warn("User not verified");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"msg\":\"User not verified\"}");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"msg\":\"User not verified\"}");
         }
 
         if (currentUser==null){
