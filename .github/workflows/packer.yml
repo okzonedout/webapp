@@ -1,19 +1,12 @@
 name: Packer-CI
 
 on:
-  pull_request:
+  push:
     branches: ["main"]
-
-env:
-  DB_NAME: ${{ secrets.DB_NAME }}
-  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-  DB_USER: ${{secrets.DB_USER}}
-  DB_HOST: ${{secrets:DB_HOST}}
 
 jobs:
   packer-ci:
     runs-on: ubuntu-latest
-
     steps:
       - name: Setup PostgreSQL for Linux/macOS/Windows
         uses: ikalnytskyi/action-setup-postgres@v5
@@ -21,72 +14,56 @@ jobs:
           username: ${{ secrets.DB_USER }}
           password: ${{ secrets.DB_PASSWORD }}
           database: ${{ secrets.DB_NAME }}
-
       - name: Checkout code
         uses: actions/checkout@v3
-
       - name: Install Packer
         uses: hashicorp/setup-packer@main
         with:
           version: "latest"
-
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
           java-version: "17"
           distribution: "temurin"
           cache: maven
-
       - name: Build with Maven
         run: mvn -B clean package -DskipTests
-
       - name: Test with Maven
         run: mvn test
-
       - name: Authenticate GCP
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_CREDENTIALS }}
-
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
-
       - name: Use GCP CLI
         run: gcloud info
-
       - name: Initialize Packer
         run: packer init packer/custom-image.pkr.hcl
-
       - name: VDB_NAME
         run: |
           VDB_NAME=$(gcloud secrets versions access 1 --secret="db-name")
           echo "VDB_NAME=$VDB_NAME" >> $GITHUB_ENV
-
       - name: VDB_USER
         run: |
           VDB_USER=$(gcloud secrets versions access 1 --secret="db-user")
           echo "VDB_USER=$VDB_USER" >> $GITHUB_ENV
-
       - name: VDB_PASSWORD
         run: |
           VDB_PASSWORD=$(gcloud secrets versions access 1 --secret="db-password")
           echo "VDB_PASSWORD=$VDB_PASSWORD" >> $GITHUB_ENV
-
       - name: VDB_HOST
         run: |
           VDB_HOST=$(gcloud secrets versions access 1 --secret="db-host")
           echo "VDB_HOST=$VDB_HOST" >> $GITHUB_ENV
-
       - name: SERVICE_ACCOUNT
         run: |
           SERVICE_ACCOUNT=$(gcloud secrets versions access 1 --secret="webapp-service-account")
           echo "SERVICE_ACCOUNT=$SERVICE_ACCOUNT" >> $GITHUB_ENV
-
       - name: ENCRYPTION_KEY
         run: |
           ENCRYPTION_KEY=$(gcloud secrets versions access 1 --secret="vm-instance-key")
           echo "ENCRYPTION_KEY=$ENCRYPTION_KEY" >> $GITHUB_ENV
-
       - name: REGION
         run: |
           REGION=$(gcloud secrets versions access 1 --secret="region")
@@ -96,21 +73,17 @@ jobs:
         run: |
           SUBNET=$(gcloud secrets versions access 1 --secret="subnet")
           echo "SUBNET=$SUBNET" >> $GITHUB_ENV
-
       - name: INSTANCE_GROUP_NAME
         run: |
           INSTANCE_GROUP_NAME=$(gcloud secrets versions access 1 --secret="instance-group-name")
           echo "INSTANCE_GROUP_NAME=$INSTANCE_GROUP_NAME" >> $GITHUB_ENV
-
       - name: Validate Packer Template
         run: packer validate packer/custom-image.pkr.hcl
-
       - name: Build Packer Template
         run: |
           PACKER_OUTPUT=$(packer build packer/custom-image.pkr.hcl)
           IMAGE_ID=$(echo "$PACKER_OUTPUT" | grep 'A disk image was created' | grep -o "centos-csye6225-[0-9\-]*")
           echo "IMAGE_ID=$IMAGE_ID" >> $GITHUB_ENV
-
       - name: Instance Template new Image
         id: create_instance_template
         run: |
@@ -121,9 +94,9 @@ jobs:
             --machine-type=n1-standard-1 \
             --image-project=csye6225-omkar \
             --image=$IMAGE_ID \
-            --boot-disk-type=pd-balanced \ 
+            --boot-disk-type=pd-balanced \
             --boot-disk-size=50 \
-            --region=us-east1  \
+            --region=$REGION \
             --subnet=$SUBNET \
             --scopes=cloud-platform \
             --instance-template-region=$REGION \
@@ -131,7 +104,6 @@ jobs:
             --boot-disk-kms-key=$ENCRYPTION_KEY \
             --tags=webapp \
             --service-account=$SERVICE_ACCOUNT \
-            --network-interface=network-tier=PREMIUM,subnet=webapp-1  
             --metadata=startup-script=$'
               #! /bin/bash
   
@@ -139,9 +111,9 @@ jobs:
           
               sudo tee /opt/application.properties <<'EOT'
               spring.datasource.driver-class-name=org.postgresql.Driver
-              spring.datasource.url=jdbc:postgresql://${env.DB_HOST}:5432/${env.DB_NAME}
-              spring.datasource.username=${env.DB_USER}
-              spring.datasource.password=${env.DB_PASSWORD}
+              spring.datasource.url=jdbc:postgresql://${{env.DB_HOST}}:5432/${{env.DB_NAME}}
+              spring.datasource.username=${{env.DB_USER}}
+              spring.datasource.password=${{env.DB_PASSWORD}}
               spring.jpa.hibernate.ddl-auto=update
               spring.jooq.sql-dialect=postgres
               spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
@@ -153,14 +125,14 @@ jobs:
           
               # Restart or start your Spring Boot application as needed
               # systemctl restart webapp.service
-          
+              ' --format="value(selfLink)") 
+              
           echo "TEMPLATE_PATH=$TEMPLATE_PATH" >> $GITHUB_ENV
       - name: Instance Group Rolling
         run: |
           gcloud compute instance-groups managed rolling-action start-update $INSTANCE_GROUP_NAME \
             --version template=$TEMPLATE_PATH \
             --region $REGION
-
       - name: Managed instance group refresh
         run: |
           gcloud compute instance-groups managed wait-until $INSTANCE_GROUP_NAME \
