@@ -123,7 +123,7 @@ jobs:
             --image=$IMAGE_ID \
             --boot-disk-type=pd-balanced \ 
             --boot-disk-size=50 \
-            --region=us-east1 \
+            --region=$REGION \
             --subnet=$SUBNET \
             --scopes=cloud-platform \
             --instance-template-region=$REGION \
@@ -131,7 +131,6 @@ jobs:
             --boot-disk-kms-key=$ENCRYPTION_KEY \
             --tags=webapp \
             --service-account=$SERVICE_ACCOUNT \
-            --network-interface=network-tier=PREMIUM,subnet=webapp-1 \
             --metadata=startup-script=$'
               #! /bin/bash
   
@@ -154,6 +153,7 @@ jobs:
               # Restart or start your Spring Boot application as needed
               # systemctl restart webapp.service
               fi' --format="value(selfLink)") 
+              
           echo "TEMPLATE_PATH=$TEMPLATE_PATH" >> $GITHUB_ENV
       - name: Instance Group Rolling
         run: |
