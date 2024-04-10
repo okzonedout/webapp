@@ -152,7 +152,7 @@ jobs:
           
               # Restart or start your Spring Boot application as needed
               # systemctl restart webapp.service
-              fi' --format="value(selfLink)") 
+              ' --format="value(selfLink)") 
               
           echo "TEMPLATE_PATH=$TEMPLATE_PATH" >> $GITHUB_ENV
       - name: Instance Group Rolling
