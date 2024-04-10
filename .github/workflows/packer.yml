@@ -121,7 +121,7 @@ jobs:
             --machine-type=n1-standard-1 \
             --image-project=csye6225-omkar \
             --image=$IMAGE_ID \
-            --boot-disk-type=pd-balanced \ 
+            --boot-disk-type=pd-balanced \
             --boot-disk-size=50 \
             --region=$REGION \
             --subnet=$SUBNET \
