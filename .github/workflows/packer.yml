@@ -8,7 +8,7 @@ env:
   DB_NAME: ${{ secrets.DB_NAME }}
   DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
   DB_USER: ${{secrets.DB_USER}}
-  DB_HOST: ${{secrets:DB_HOST}}
+  DB_HOST: ${{secrets.DB_HOST}}
 
 jobs:
   packer-ci:
@@ -153,7 +153,7 @@ jobs:
           
               # Restart or start your Spring Boot application as needed
               # systemctl restart webapp.service
-          
+              fi' --format="value(selfLink)") 
           echo "TEMPLATE_PATH=$TEMPLATE_PATH" >> $GITHUB_ENV
       - name: Instance Group Rolling
         run: |
