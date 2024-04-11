@@ -57,25 +57,25 @@ jobs:
       - name: Initialize Packer
         run: packer init packer/custom-image.pkr.hcl
 
-      - name: DB_NAME
+      - name: VDB_NAME
         run: |
-          DB_NAME=$(gcloud secrets versions access 1 --secret="db-name")
-          echo "DB_NAME=$DB_NAME" >> $GITHUB_ENV
+          VDB_NAME=$(gcloud secrets versions access 1 --secret="db-name")
+          echo "VDB_NAME=$VDB_NAME" >> $GITHUB_ENV
 
-      - name: DB_USER
+      - name: VDB_USER
         run: |
-          DB_NAME=$(gcloud secrets versions access 1 --secret="db-user")
-          echo "DB_USER=$DB_USER" >> $GITHUB_ENV
+          VDB_USER=$(gcloud secrets versions access 1 --secret="db-user")
+          echo "VDB_USER=$VDB_USER" >> $GITHUB_ENV
 
-      - name: DB_PASSWORD
+      - name: VDB_PASSWORD
         run: |
-          DB_NAME=$(gcloud secrets versions access 1 --secret="db-password")
-          echo "DB_PASSWORD=$DB_PASSWORD" >> $GITHUB_ENV
+          VDB_PASSWORD=$(gcloud secrets versions access 1 --secret="db-password")
+          echo "VDB_PASSWORD=$VDB_PASSWORD" >> $GITHUB_ENV
 
-      - name: DB_HOST
+      - name: VDB_HOST
         run: |
-          DB_NAME=$(gcloud secrets versions access 1 --secret="db-host")
-          echo "DB_HOST=$DB_HOST" >> $GITHUB_ENV
+          VDB_HOST=$(gcloud secrets versions access 1 --secret="db-host")
+          echo "VDB_HOST=$VDB_HOST" >> $GITHUB_ENV
 
       - name: SERVICE_ACCOUNT
         run: |
