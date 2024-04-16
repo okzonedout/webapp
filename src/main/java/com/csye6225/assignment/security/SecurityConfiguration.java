@@ -48,7 +48,7 @@ public class SecurityConfiguration {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authenticationProvider(daoAuthenticationProvider())
                 .authorizeHttpRequests((authorize) -> authorize.requestMatchers("/healthz").permitAll())
-                .authorizeHttpRequests((authorize) -> authorize.requestMatchers("/v1/user/**"))
+                .authorizeHttpRequests((authorize) -> authorize.requestMatchers("/v20/user/**"))
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
