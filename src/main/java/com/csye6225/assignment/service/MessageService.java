@@ -21,11 +21,12 @@ public class MessageService {
     public boolean publishMessageToTopic(String msg){
 
         try {
-            CompletableFuture<String> temp = pubSubTemplate.publish("verify_email",msg);
-            if(temp.isDone()){
-                return true;
-            }
-            LOGGER.error("Message Publish Not Done. ");
+            pubSubTemplate.publish("verify_email",msg);
+//            CompletableFuture<String> temp = pubSubTemplate.publish("verify_email",msg);
+//            if(temp.isDone()){
+//                return true;
+//            }
+//            LOGGER.error("Message Publish Not Done. ");
         }catch (Exception e){
             LOGGER.error("Message Publish Failed. " + e.getMessage());
             LOGGER.debug("Message Publish Error. \n" + Arrays.toString(e.getStackTrace()));
